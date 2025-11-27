@@ -1,0 +1,10 @@
+# Carpeta de compilación de Maven
+target/
+
+# Archivos de IDE (VS Code, IntelliJ)
+.idea/
+.vscode/
+*.iml
+
+# Archivos de registro
+*.log
