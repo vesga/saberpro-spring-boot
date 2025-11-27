@@ -1,0 +1,154 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <title>Mi Dashboard - Estudiante</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+    <style>
+        body {
+            background: #f5f7fa;
+        }
+
+        .card {
+            border-radius: 16px;
+        }
+
+        .kpi-card {
+            color: white;
+            padding: 20px;
+            border-radius: 16px;
+        }
+
+        .bg-kpi-1 { background: linear-gradient(135deg, #4e73df, #224abe); }
+        .bg-kpi-2 { background: linear-gradient(135deg, #1cc88a, #13855c); }
+        .bg-kpi-3 { background: linear-gradient(135deg, #f6c23e, #dda20a); }
+
+        .table thead th {
+            background-color: #212529 !important;
+            color: white;
+        }
+    </style>
+
+</head>
+
+<body class="p-4">
+
+<div class="container">
+
+    <h1 class="mb-4 fw-bold">
+        <i class="bi bi-person-circle"></i>
+        Bienvenido, <span th:text="${alumno.nombre}">Estudiante</span>
+    </h1>
+
+    <div class="row mb-4">
+
+        <div class="col-md-4">
+            <div class="kpi-card bg-kpi-1 shadow">
+                <h5><i class="bi bi-mortarboard-fill"></i> Programa</h5>
+                <h3 class="mt-2" th:text="${alumno.programa}">--</h3>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="kpi-card bg-kpi-2 shadow">
+                <h5><i class="bi bi-layers-fill"></i> Semestre</h5>
+                <h3 class="mt-2" th:text="${alumno.semestre}">--</h3>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="kpi-card bg-kpi-3 shadow">
+                <h5><i class="bi bi-file-earmark-bar-graph-fill"></i> Último Puntaje</h5>
+                <h3 class="mt-2"
+                    th:text="${resultadoUnico != null ? resultadoUnico.puntaje : '--'}">--</h3>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h4 class="mb-3"><i class="bi bi-person-badge-fill"></i> Mis Datos</h4>
+
+            <p><strong>Identificación:</strong> <span th:text="${alumno.identificacion}"></span></p>
+            <p><strong>Correo:</strong> <span th:text="${alumno.correo} ?: 'Sin registrar'"></span></p>
+        </div>
+    </div>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h4><i class="bi bi-clipboard2-check-fill"></i> Mi Último Resultado</h4>
+
+            <div th:if="${resultadoUnico != null}">
+                <p><strong>Examen:</strong> <span th:text="${resultadoUnico.tipoExamen}"></span></p>
+                <p><strong>Puntaje:</strong> <span th:text="${resultadoUnico.puntaje}"></span></p>
+                <p><strong>Fecha:</strong> <span th:text="${resultadoUnico.fecha}"></span></p>
+
+                <div class="mt-3">
+                    <h5><i class="bi bi-gift-fill"></i> Incentivo</h5>
+
+                    <div th:if="${incentivo != null}">
+                        <p>
+                            <strong>Tipo:</strong> <span th:text="${incentivo.tipoIncentivo}"></span><br>
+                            
+                            <strong>Valor:</strong> 
+                            <span th:if="${incentivo.porcentajeBeca != null}" th:text="${incentivo.porcentajeBeca} + '% de Beca'"></span>
+                            <span th:if="${incentivo.notaExigida != null and incentivo.porcentajeBeca == null}" th:text="'Nota Exigida: ' + ${incentivo.notaExigida}"></span>
+                            <span th:if="${incentivo.descripcion != null and incentivo.porcentajeBeca == null and incentivo.notaExigida == null}" th:text="${incentivo.descripcion}"></span>
+                            <span th:if="${incentivo.descripcion == null and incentivo.porcentajeBeca == null and incentivo.notaExigida == null}">Por definir</span>
+                        </p>
+                    </div>
+
+                    <p th:if="${incentivo == null}">
+                        No recibiste incentivo en este examen.
+                    </p>
+                </div>
+
+            </div>
+
+            <p th:if="${resultadoUnico == null}">Aún no tienes resultados registrados.</p>
+        </div>
+    </div>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h4><i class="bi bi-journal-check"></i> Historial de Resultados</h4>
+
+            <table class="table table-bordered mt-3">
+                <thead>
+                <tr>
+                    <th>Fecha</th>
+                    <th>Tipo</th>
+                    <th>Puntaje</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr th:each="r : ${resultados}">
+                    <td th:text="${r.fecha}"></td>
+                    <td th:text="${r.tipoExamen}"></td>
+                    <td th:text="${r.puntaje}"></td>
+                </tr>
+                </tbody>
+            </table>
+
+            <p th:if="${resultados.size() == 0}">
+                No tienes resultados registrados.
+            </p>
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <a href="/logout" class="btn btn-danger">
+            <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
+        </a>
+    </div>
+
+</div>
+
+</body>
+</html>
